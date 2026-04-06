@@ -98,7 +98,7 @@ body{margin:0;background:#000;color:#d6c7a1;font-family:Georgia,serif;overflow:h
 <div class="img-box" onclick="openImg(this,4)"><img src="foto (4).png"><div class="timestamp">???</div></div>
 <div class="img-box" onclick="openImg(this,5)"><img src="foto (5).png"><div class="timestamp">Secretos</div></div>
 <div class="img-box" onclick="openImg(this,6)"><img src="foto (6).png"><div class="timestamp">???</div></div>
-<div class="img-box" onclick="openImg(this,7)"><img src="foto (7).png"><div class="timestamp">Final</div></div>
+<div class="img-box" onclick="openImg(this,7)"><img src="foto (7).png"><div class="timestamp">Final (Coordenadas)</div></div>
 
 <div class="img-box locked" id="lockedBox">Esta foto se desbloquea al ver las otras</div>
 
@@ -191,7 +191,7 @@ function showMessage(text){
 }
 
 // MENSAJES CONSTANTES
-const mensajes=["ALGO NOS OBSERVA","SECRETOS","???","NO DEBISTE ENTRAR","TE ESTÁ VIENDO"];
+const mensajes=["REVISA LAS COORDENADAS","SECRETOS, FOTO, ULTIMA","???","QUE HACES AQUI?","TE ESTÁ VIENDO"];
 
 setInterval(()=>{
  showMessage(mensajes[Math.floor(Math.random()*mensajes.length)]);
