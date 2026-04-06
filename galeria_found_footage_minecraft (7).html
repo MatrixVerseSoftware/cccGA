@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crónicas Sumergidas</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#d6c7a1;font-family:Georgia,serif;overflow:hidden}
+
+#login{position:fixed;width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#000;z-index:20}
+#login input{padding:12px;background:black;border:1px solid #444;color:#fff;font-size:16px}
+#msg{margin-top:10px;color:red;opacity:0;transition:.3s}
+
+#intro{position:fixed;width:100%;height:100%;background:black;display:none;align-items:center;justify-content:center;flex-direction:column;z-index:30;color:#8b0000;font-size:2rem;text-align:center}
+
+#main{display:none;overflow:auto}
+
+.container{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+ gap:20px;
+ padding:20px;
+}
+
+.img-box{
+ position:relative;
+ overflow:hidden;
+ border:1px solid rgba(255,0,0,.2);
+ border-radius:8px;
+ cursor:pointer;
+}
+
+.img-box img{
+ width:100%;
+ display:block;
+ transition:.3s;
+}
+
+.img-box:hover img{
+ transform:scale(1.05);
+ filter:brightness(70%);
+}
+
+.locked{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:14px;
+ text-align:center;
+ padding:20px;
+ background:#111;
+ color:#aaa;
+}
+
+.timestamp{position:absolute;bottom:5px;left:5px;font-size:11px;background:rgba(0,0,0,.6);padding:2px 4px}
+
+.blood{
+ position:fixed;
+ top:0;left:0;
+ width:100%;height:100%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ font-size:3rem;
+ color:#8b0000;
+ background:rgba(0,0,0,0.85);
+ opacity:0;
+ pointer-events:none;
+ z-index:50;
+ text-shadow:0 0 20px red;
+}
+
+.modal{position:fixed;width:100%;height:100%;top:0;left:0;background:rgba(0,0,0,.95);display:none;align-items:center;justify-content:center}
+.modal img{max-width:95%;max-height:90%}
+
+</style>
+</head>
+<body>
+
+<div id="login">
+<h2>INGRESA USUARIO</h2>
+<input id="user" placeholder="Username MC">
+<div id="msg">Se quien eres...</div>
+</div>
+
+<div id="intro">Había algo en las fotografías...</div>
+
+<div id="main">
+<div class="blood" id="bloodText"></div>
+
+<div class="container" id="gallery">
+
+<div class="img-box" onclick="openImg(this,1)"><img src="foto (1).png"><div class="timestamp">Día I</div></div>
+<div class="img-box" onclick="openImg(this,2)"><img src="foto (2).png"><div class="timestamp">Día II</div></div>
+<div class="img-box" onclick="openImg(this,3)"><img src="foto (3).png"><div class="timestamp">Día III</div></div>
+<div class="img-box" onclick="openImg(this,4)"><img src="foto (4).png"><div class="timestamp">???</div></div>
+<div class="img-box" onclick="openImg(this,5)"><img src="foto (5).png"><div class="timestamp">Secretos</div></div>
+<div class="img-box" onclick="openImg(this,6)"><img src="foto (6).png"><div class="timestamp">???</div></div>
+<div class="img-box" onclick="openImg(this,7)"><img src="foto (7).png"><div class="timestamp">Final</div></div>
+
+<div class="img-box locked" id="lockedBox">Esta foto se desbloquea al ver las otras</div>
+
+</div>
+</div>
+
+<div class="modal" id="modal" onclick="closeImg()">
+<img id="modalImg">
+</div>
+
+<audio id="sound" src="https://www.myinstants.com/media/sounds/creepy-noise.mp3"></audio>
+
+<script>
+const user=document.getElementById('user');
+const msg=document.getElementById('msg');
+const login=document.getElementById('login');
+const intro=document.getElementById('intro');
+const main=document.getElementById('main');
+const sound=document.getElementById('sound');
+
+let viewed=0;
+const total=7;
+
+user.addEventListener('input',()=>{
+ if(user.value.length>2){
+  msg.style.opacity=1;
+  setTimeout(()=>{
+   login.style.display='none';
+   intro.style.display='flex';
+   sound.play();
+
+   setTimeout(()=>{
+    intro.innerText="No debiste venir...";
+   },1500);
+
+   setTimeout(()=>{
+    intro.style.display='none';
+    main.style.display='block';
+    document.body.style.overflow='auto';
+   },3000);
+
+  },1000);
+ }
+});
+
+const modal=document.getElementById('modal');
+const modalImg=document.getElementById('modalImg');
+
+function openImg(el,index){
+ modal.style.display='flex';
+ modalImg.src=el.querySelector('img')?.src || 'end.png';
+
+ if(!el.classList.contains('seen') && index){
+  el.classList.add('seen');
+  viewed++;
+  checkUnlock();
+ }
+
+ // EVENTOS ESPECIALES
+ if(index===3){
+  showMessage("¿Revisaste bien las fotos?");
+ }
+
+ if(el.id==='lockedBox'){
+  setTimeout(()=>{
+   showMessage("-143 36 1881");
+   setTimeout(()=>{
+    showMessage("Yo no iría solo si fuera tú...");
+   },2000);
+  },1000);
+ }
+}
+
+function closeImg(){modal.style.display='none'}
+
+function checkUnlock(){
+ if(viewed>=total){
+  const locked=document.getElementById('lockedBox');
+  locked.classList.remove('locked');
+  locked.innerHTML='<img src="end.png">';
+  locked.onclick=function(){openImg(this)};
+ }
+}
+
+function showMessage(text){
+ const blood=document.getElementById('bloodText');
+ blood.innerText=text;
+ blood.style.opacity=1;
+ setTimeout(()=>blood.style.opacity=0,2000);
+}
+
+// MENSAJES CONSTANTES
+const mensajes=["ALGO NOS OBSERVA","SECRETOS","???","NO DEBISTE ENTRAR","TE ESTÁ VIENDO"];
+
+setInterval(()=>{
+ showMessage(mensajes[Math.floor(Math.random()*mensajes.length)]);
+},8000);
+</script>
+
+</body>
+</html>
